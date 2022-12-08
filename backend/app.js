@@ -10,10 +10,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 //const Thing = require('./models/thing');
 
-//Router modules
-//const stuffRoutes = require('./routes/stuff');
-//const userRoutes = require('./routes/user');
-
 //Database settings.
 mongoose.connect('mongodb+srv://ineszocly:9626Zocly@cluster0.000wm9q.mongodb.net/?retryWrites=true&w=majority',
 { useNewUrlParser: true,
@@ -30,12 +26,15 @@ app.use((req, res, next) => {
   });
 
 
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
+
+//Router modules
+const sauceRoutes = require('./routes/sauce');
+const userRoutes = require('./routes/user');
 
 //Routes
-app.get('/', (req, res) => {
-  res.send(`Le serveur et l'application fonctionnent`);
-})
+app.use('/api/sauces', sauceRoutes);
+app.use('/api/auth', userRoutes);
 
 
 module.exports = app;
