@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 
 
 app.use(bodyParser.json());
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 //Router modules
 const sauceRoutes = require('./routes/sauce');
@@ -38,3 +39,5 @@ app.use('/api/auth', userRoutes);
 
 
 module.exports = app;
+
+
