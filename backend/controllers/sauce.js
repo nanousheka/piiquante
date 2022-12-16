@@ -77,49 +77,41 @@ exports.likeSauce = (req, res, next) =>{
   .then((sauce) =>{
     const parsedLike = parseInt(req.body.like);
     //User like the sauce only if he(she)'s not already in usersLiked array and if in disliked array, get off.
-    if (!sauce.userId === req.auth.user){
+    if (sauce.userId === req.auth.userId){
+      res.status(401).json(error => {error});
+    }else{
       if(parsedLike === 1){
-        if(!sauce.usersLiked.find(user => user = req.auth.userId)){
+        if(sauce.usersLiked.includes(req.auth.userId)){
+          res.status(400).json({error})
+        }else{
           Sauce.updateOne({_id: req.params.id},{$inc: { likes: 1 }, $push:{usersLiked : req.auth.userId}})
           .then(() => res.status(200).json({message : 'Liké avec succès!'}))
-          .catch(error => res.status(401).json({ error }));
-        }
-
-        if(sauce.usersDisliked.find(user => user = req.auth.userId)){
-          Sauce.updateOne({_id: req.params.id},{$inc: { dislikes: -1 }, $pull:{usersDisliked : req.auth.userId}})
-          .then(() => res.status(200).json({message : 'Retrait du dislike avec succès!'}))
           .catch(error => res.status(401).json({ error }));
         }
       }
 
       if(parsedLike === 0){
-        if(sauce.usersLiked.find(user => user = req.auth.userId)){
-          Sauce.updateOne({_id: req.params.id},{$inc: { likes: -1 }, $pull:{usersLiked : req.auth.userId}})
+        if(sauce.usersLiked.includes(req.auth.userId)){
+          Sauce.updateOne({_id: req.params.id},{$inc:{likes: -1}, $pull:{usersLiked : req.auth.userId}})
           .then(() => res.status(200).json({message : 'Retrait du like avec succès!'}))
           .catch(error => res.status(401).json({ error }));
         }
-        if(sauce.usersDisliked.find(user => user = req.auth.userId)){
-          Sauce.updateOne({_id: req.params.id},{$inc: { dislikes: -1 }, $pull:{usersLiked : req.auth.userId}})
+        if(sauce.usersDisliked.includes(req.auth.userId)){
+          Sauce.updateOne({_id: req.params.id},{$inc:{dislikes: -1}, $pull:{usersDisliked : req.auth.userId}})
           .then(() => res.status(200).json({message : 'Retrait du dislike avec succès!'}))
           .catch(error => res.status(401).json({ error }));
         }
       }
 
       if(parsedLike === -1){
-        if(!sauce.usersDisliked.find(user => user = req.auth.userId)){
-          Sauce.updateOne({_id: req.params.id},{$inc: { dislikes: 1 }, $push:{usersDisliked : req.auth.userId}})
+        if(sauce.usersDisliked.includes(req.auth.userId)){
+          res.status(400).json({error})
+        }else {
+          Sauce.updateOne({_id: req.params.id},{$inc:{ dislikes: 1 }, $push:{usersDisliked : req.auth.userId}})
           .then(() => res.status(200).json({message : 'Disliké avec succès!'}))
           .catch(error => res.status(401).json({ error }));
         }
-
-        if(sauce.usersLiked.find(user => user = req.auth.userId)){
-          Sauce.updateOne({_id: req.params.id},{$inc: { likes: -1 }, $pull:{usersLiked : req.auth.userId}})
-          .then(() => res.status(200).json({message : 'Retrait du like avec succès!'}))
-          .catch(error => res.status(401).json({ error }));
-        }
       }
-    }else{
-      res.json({message: 'Vous n\'êtes pas autorisé(e) à liker ou disliker votre propre sauce.'})
     }
 
   })

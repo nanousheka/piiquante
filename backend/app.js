@@ -8,7 +8,7 @@ const path = require('path');
 
 //Database modules
 const mongoose = require('mongoose');
-//const Thing = require('./models/thing');
+
 
 //Database settings.
 mongoose.connect('mongodb+srv://ineszocly:9626Zocly@cluster0.000wm9q.mongodb.net/?retryWrites=true&w=majority',
