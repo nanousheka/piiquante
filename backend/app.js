@@ -6,6 +6,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
 
+
 //Database modules
 const mongoose = require('mongoose');
 
@@ -36,6 +37,7 @@ const userRoutes = require('./routes/user');
 //Routes
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+
 
 
 module.exports = app;
