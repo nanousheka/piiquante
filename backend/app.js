@@ -10,6 +10,9 @@ const path = require('path');
 //Database modules
 const mongoose = require('mongoose');
 
+//Security modules
+const helmet = require('helmet');
+
 
 //Database settings.
 mongoose.connect('mongodb+srv://ineszocly:9626Zocly@cluster0.000wm9q.mongodb.net/?retryWrites=true&w=majority',
@@ -26,6 +29,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
