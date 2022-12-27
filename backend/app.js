@@ -15,9 +15,8 @@ const helmet = require('helmet');
 
 
 //Database settings.
-mongoose.connect('mongodb+srv://ineszocly:9626Zocly@cluster0.000wm9q.mongodb.net/?retryWrites=true&w=majority',
-{ useNewUrlParser: true,
-useUnifiedTopology: true })
+mongoose.connect(process.env.MDB_CREDENTIALS , { useNewUrlParser: true,
+  useUnifiedTopology: true })
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch((error) => console.log(`Votre connexion a échoué parce que ${error}`));
 
@@ -29,7 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 app.use(bodyParser.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
